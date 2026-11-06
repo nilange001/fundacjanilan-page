@@ -1,0 +1,82 @@
+Oto kompletna procedura krok po kroku, jak przygotować repozytorium, wgrać pliki oraz poprawnie skonfigurować rekordy DNS u Twojego rejestratora domeny.
+
+Krok 1: Przygotowanie repozytorium i plików
+
+1. Zaloguj się na GitHub i utwórz nowe repozytorium (przycisk New).
+2. Nazwa repozytorium: Jeśli chcesz, aby strona działała bezpośrednio pod Twoją domeną, nazwa może być dowolna (np. moja-strona), ale repozytorium musi być publiczne (darmowe GitHub Pages działa tylko na publicznych projektach).
+3. Główny plik: Upewnij się, że Twój główny plik strony nazywa się dokładnie index.html i znajduje się w katalogu głównym (root) repozytorium. GitHub Pages automatycznie szuka tego pliku przy uruchamianiu witryny.
+4. Wgraj pliki HTML, CSS i JS do repozytorium (za pomocą Gita git push lub po prostu przeciągając pliki przez przeglądarkę za pomocą opcji Upload files).
+
+Krok 2: Włączenie GitHub Pages
+
+1. Wejdź w swoim repozytorium w zakładkę Settings (Ustawienia) na górnym pasku.
+2. W menu po lewej stronie wybierz sekcję Pages (w dziale Code and automation).
+3. W sekcji Build and deployment -> Source upewnij się, że wybrana jest opcja Deploy from a branch.
+4. Poniżej jako Branch wybierz swoją główną gałąź (zazwyczaj main lub master) oraz folder / (root), a następnie kliknij Save.
+
+Krok 3: Konfiguracja domeny w DNS (Najważniejsze technicznie)
+
+Musisz wskazać swojemu rejestratorowi domeny (np. OVH, cyber_Folks, SeoHost itp.), że domena ma kierować na serwery IP GitHuba. Zaloguj się do panelu zarządzania domeną i przejdź do edycji rekordów DNS.
+
+A. Konfiguracja domeny głównej (np. twojadomena.pl)
+
+Dodaj cztery rekordy typu A wskazujące na oficjalne adresy IP usługi GitHub Pages:
+• Rekord A | Nazwa/Host: @ (lub zostaw puste) | Wartość/IP: 185.199.108.153
+• Rekord A | Nazwa/Host: @ (lub zostaw puste) | Wartość/IP: 185.199.109.153
+• Rekord A | Nazwa/Host: @ (lub zostaw puste) | Wartość/IP: 185.199.110.153
+• Rekord A | Nazwa/Host: @ (lub zostaw puste) | Wartość/IP: 185.199.111.153
+
+B. Konfiguracja subdomeny WWW (np. www.twojadomena.pl)
+
+Aby strona działała również z przedrostkiem www, dodaj lub zmodyfikuj rekord CNAME:
+• Rekord CNAME | Nazwa/Host: www | Wartość/Cel: TWÓJ_LOGIN_GITHUB.github.io. (uwaga na kropkę na końcu w niektórych panelach)
+
+Krok 4: Podpięcie domeny w GitHubie
+
+1. Wróć do zakładki Settings -> Pages w swoim repozytorium na GitHubie.
+2. W polu Custom domain wpisz swoją pełną domenę (np. twojadomena.pl) i kliknij Save.
+3. GitHub automatycznie utworzy w Twoim repozytorium plik o nazwie CNAME (nie usuwaj go przy kolejnych aktualizacjach strony!).
+4. Zaznacz opcję Enforce HTTPS (wymuszenie szyfrowania SSL). Uwaga: ta opcja może być aktywna dopiero po kilkunastu minutach, gdy GitHub wygeneruje dla Ciebie darmowy certyfikat Let's Encrypt.
+
+Krok 5: Weryfikacja domeny na GitHubie (Dobra praktyka IT)
+
+Aby nikt inny nie podpiął Twojej domeny pod swoje repozytorium, zweryfikuj ją na swoim koncie GitHub:
+1. Kliknij na swój awatar w prawym górnym rogu GitHub -> Settings.
+2. W lewym menu przejdź do Pages (w sekcji Code, planning, and automation).
+3. Kliknij Add a domain, wpisz swoją domenę i postępuj zgodnie z instrukcją – GitHub poprosi Cię o dodanie jednego rekordu TXT w ustawieniach DNS Twojej domeny w celu weryfikacji własności.
+Zanim zaczniesz, napisz:
+• U jakiego rejestratora masz wykupioną domenę (pomoże to w razie specyficznego układu panelu DNS)?
+• Czy Twoja strona zawiera jakieś skrypty backendowe lub formularze kontaktowe (ponieważ GitHub Pages obsługuje wyłącznie statyczny front-end)?
+Odpowiedzi wygenerowane przez AI mogą zawierać błędy. Więcej informacji
+
+
+Krok po kroku w panelu Hostigo.pl
+
+1. Zaloguj się do swojego Panelu Klienta na stronie Hostigo.pl.
+2. Przejdź do sekcji Domeny lub Zarządzanie DNS (w zależności od wersji ich panelu opcja ta może nazywać się również Strefa DNS lub Edycja rekordów przy danej domenie).
+3. Wybierz domenę, którą chcesz podpiąć pod GitHuba.
+4. Usuń stare rekordy A oraz CNAME, które aktualnie kierują domenę na stary serwer lub stronę domyślną Hostigo (często jest to domyślny rekord CNAME dla www oraz rekord A dla domeny głównej). Ważne: Nie usuwaj rekordów MX, jeśli masz w Hostigo pocztę e-mail!
+5. Dodaj nowe rekordy zgodnie z poniższą listą:
+
+1. Rekordy dla domeny głównej (twojadomena.pl)
+
+Dodaj 4 osobne rekordy. W polu Nazwa/Host wpisz @ lub pozostaw to pole puste (w zależności od tego, jak formularz Hostigo przyjmuje domenę główną):
+• Typ: A | Nazwa/Host: @ | Wartość/Cel: 185.199.108.153
+• Typ: A | Nazwa/Host: @ | Wartość/Cel: 185.199.109.153
+• Typ: A | Nazwa/Host: @ | Wartość/Cel: 185.199.110.153
+• Typ: A | Nazwa/Host: @ | Wartość/Cel: 185.199.111.153
+
+2. Rekord dla subdomeny WWW (www.twojadomena.pl)
+
+Dodaj jeden rekord przekierowujący ruch z "www" na Twój profil GitHub:
+• Typ: CNAME | Nazwa/Host: www | Wartość/Cel: TWÓJ_LOGIN_GITHUB.github.io. (Pamiętaj o wpisaniu własnego loginu z GitHuba zamiast kapitalików).
+
+Co dzieje się dalej? (Z perspektywy IT)
+
+• Rozpropagowanie DNS: Po zapisaniu zmian w Hostigo, nowe adresy IP muszą roznieść się po sieci Internet. Trwa to zazwyczaj od 15 minut do maksymalnie kilku godzin.
+• Włączenie HTTPS na GitHubie: Dopiero gdy serwery GitHuba "zobaczą", że Hostigo prawidłowo na nie kieruje, opcja Enforce HTTPS w ustawieniach repozytorium (Settings -> Pages) stanie się aktywna. Kliknij ją od razu, gdy będzie dostępna, aby Twoja strona miała zieloną kłódkę (certyfikat SSL).
+Daj znać, czy:
+• Formularz dodawania rekordów w Hostigo wymaga podania parametru TTL (jeśli tak, wpisz standardowe 3600 lub 14400)?
+• Potrzebujesz pomocy z weryfikacją domeny kluczem TXT na GitHubie, aby nikt się pod nią nie podszywał?
+Odpowiedzi wygenerowane przez AI mogą zawierać błędy. Więcej informacji
+
